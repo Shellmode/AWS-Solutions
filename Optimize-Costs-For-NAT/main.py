@@ -30,14 +30,14 @@ def create_s3_bucket_for_vpcflowlog():
     s3_client.create_bucket(Bucket=S3_BUCKET_FOR_VPCFLOWLOG)
     s3_client.create_bucket(Bucket=S3_BUCKET_FOR_ATHENA_RESULTS)
 
-def create_vpcflowlogs():
+def create_flowlogs():
     natGatewayENIs = _get_nat_gateway_enis()
     pprint.pprint(natGatewayENIs)
 
     response = ec2_client.create_flow_logs(
         ResourceType='NetworkInterface',
-        #ResourceIds=natGatewayENIs,
-        ResourceIds=["eni-0d6f291e4807b81a2"],
+        ResourceIds=natGatewayENIs,
+        #ResourceIds=["eni-0d6f291e4807b81a2"],
         TrafficType='ALL',
         LogDestinationType='s3',
         LogDestination="arn:aws:s3:::%s/" % S3_BUCKET_FOR_VPCFLOWLOG,
@@ -104,7 +104,7 @@ def get_top_flows():
 
 if __name__ == '__main__':
     # create_s3_bucket_for_vpcflowlog()
-    # create_vpcflowlogs()
+    # create_flowlogs()
     # init_athena()
     get_top_flows()
 
